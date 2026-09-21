@@ -1,0 +1,21 @@
+# Python / Virtualenv
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Databases
+*.db
+*.sqlite3
+
+# Environments
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
