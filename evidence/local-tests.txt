@@ -1,0 +1,44 @@
+test_catalog_pagination_and_search (test_lab4.APITests.test_catalog_pagination_and_search) ... ok
+test_create_replace_delete_draft_and_optimistic_lock (test_lab4.APITests.test_create_replace_delete_draft_and_optimistic_lock) ... ok
+test_http_wire_parsing_and_serialization_without_tcp (test_lab4.APITests.test_http_wire_parsing_and_serialization_without_tcp) ... 127.0.0.1 - - [27/Oct/2026 11:11:18] "GET /api/v1/health HTTP/1.0" 200 -
+127.0.0.1 - - [27/Oct/2026 11:11:18] "POST /api/v1/auth/token HTTP/1.0" 400 -
+127.0.0.1 - - [27/Oct/2026 11:11:18] "GET /api/v1/me HTTP/1.0" 401 -
+ok
+test_live_http_json_and_problem_response (test_lab4.APITests.test_live_http_json_and_problem_response) ... skipped 'Environment blocks binding TCP sockets: [Errno 1] Operation not permitted'
+test_mock_examples_validate_body_and_role (test_lab4.APITests.test_mock_examples_validate_body_and_role) ... ok
+test_offline_batch_requires_event_staff (test_lab4.APITests.test_offline_batch_requires_event_staff) ... ok
+test_protected_route_requires_auth (test_lab4.APITests.test_protected_route_requires_auth) ... ok
+test_published_event_not_hard_deleted (test_lab4.APITests.test_published_event_not_hard_deleted) ... ok
+test_registration_body_and_idempotency_key_required (test_lab4.APITests.test_registration_body_and_idempotency_key_required) ... ok
+test_wallet_clearly_reports_unconfigured (test_lab4.APITests.test_wallet_clearly_reports_unconfigured) ... ok
+test_all_operations_have_unique_ids_bodies_and_traceability (test_lab4.ContractTests.test_all_operations_have_unique_ids_bodies_and_traceability) ... ok
+test_external_jsonschema_validation_of_every_example (test_lab4.ContractTests.test_external_jsonschema_validation_of_every_example) ... /Users/victoriaivanova/Documents/7_sem/pchmi/CampusMeet-Server/tests/test_lab4.py:250: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+  from jsonschema import Draft4Validator, FormatChecker, RefResolver
+ok
+test_external_openapi_validation (test_lab4.ContractTests.test_external_openapi_validation) ... skipped 'Full OAS validator is installed in CI'
+test_attendee_cannot_scan (test_lab4.DomainTests.test_attendee_cannot_scan) ... ok
+test_cancel_used_ticket_forbidden (test_lab4.DomainTests.test_cancel_used_ticket_forbidden) ... ok
+test_capacity_constraints_reject_event_and_venue_changes (test_lab4.DomainTests.test_capacity_constraints_reject_event_and_venue_changes) ... ok
+test_checkin_duplicate_and_scan_replay (test_lab4.DomainTests.test_checkin_duplicate_and_scan_replay) ... ok
+test_concurrent_registration_does_not_overbook (test_lab4.DomainTests.test_concurrent_registration_does_not_overbook) ... ok
+test_duplicate_registration_under_new_key (test_lab4.DomainTests.test_duplicate_registration_under_new_key) ... ok
+test_foreign_ticket_cannot_read_or_cancel (test_lab4.DomainTests.test_foreign_ticket_cannot_read_or_cancel) ... ok
+test_full_event_without_waitlist_is_conflict (test_lab4.DomainTests.test_full_event_without_waitlist_is_conflict) ... ok
+test_idempotency_rejects_body_change (test_lab4.DomainTests.test_idempotency_rejects_body_change) ... ok
+test_register_idempotency_returns_same_ticket (test_lab4.DomainTests.test_register_idempotency_returns_same_ticket) ... ok
+test_schema_has_seventeen_tables_and_foreign_keys (test_lab4.DomainTests.test_schema_has_seventeen_tables_and_foreign_keys) ... ok
+test_waitlist_promotes_oldest_and_cancel_is_idempotent (test_lab4.DomainTests.test_waitlist_promotes_oldest_and_cancel_is_idempotent) ... ok
+test_discovery_tools_resources_prompts (test_lab4.MCPTests.test_discovery_tools_resources_prompts) ... ok
+test_foreign_ticket_is_tool_error_not_success (test_lab4.MCPTests.test_foreign_ticket_is_tool_error_not_success) ... ok
+test_handshake_required (test_lab4.MCPTests.test_handshake_required) ... ok
+test_invalid_rpc_batch_is_rejected (test_lab4.MCPTests.test_invalid_rpc_batch_is_rejected) ... ok
+test_prompt_requires_argument (test_lab4.MCPTests.test_prompt_requires_argument) ... ok
+test_real_stdio_client (test_lab4.MCPTests.test_real_stdio_client) ... ok
+test_resources_are_scoped_to_current_user (test_lab4.MCPTests.test_resources_are_scoped_to_current_user) ... ok
+test_tool_argument_does_not_override_identity (test_lab4.MCPTests.test_tool_argument_does_not_override_identity) ... ok
+test_used_ticket_rejected_and_logged (test_lab4.MCPTests.test_used_ticket_rejected_and_logged) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 1.459s
+
+OK (skipped=2)

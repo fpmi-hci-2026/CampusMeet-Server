@@ -1,0 +1,66 @@
+name: Server contracts, tests and container
+on:
+  push:
+    branches: [main, develop, production, development]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: campusmeet
+          POSTGRES_USER: campusmeet
+          POSTGRES_PASSWORD: test-only
+        ports: ["5432:5432"]
+        options: --health-cmd="pg_isready -U campusmeet" --health-interval=5s --health-timeout=5s --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check campusmeet scripts tests
+      - run: python scripts/export_contracts.py && python scripts/build_sqlite_schema.py
+      - run: git diff --exit-code -- api database/schema.sqlite.sql
+      - run: python -m unittest discover -s tests -v
+      - run: python scripts/mcp_client.py --output evidence/mcp-ci-session.json
+      - name: Apply physical PostgreSQL schema
+        env:
+          PGPASSWORD: test-only
+        run: psql -h 127.0.0.1 -U campusmeet -d campusmeet -v ON_ERROR_STOP=1 -f database/schema.postgresql.sql
+      - uses: actions/upload-artifact@v4
+        with:
+          name: api-and-mcp-evidence
+          path: |
+            api/openapi.json
+            evidence/mcp-ci-session.json
+  container:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: docker build -t campusmeet-api:ci .
+      - name: HTTP smoke test inside container
+        run: |
+          docker run -d --name campusmeet-api -p 8000:8000 campusmeet-api:ci
+          for attempt in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8000/api/v1/health; then exit 0; fi
+            sleep 1
+          done
+          docker logs campusmeet-api
+          exit 1
+      - run: python scripts/smoke_http.py --output evidence/http-ci-session.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: http-smoke-evidence
+          path: evidence/http-ci-session.json
+      - if: always()
+        run: docker rm -f campusmeet-api
