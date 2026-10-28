@@ -1,0 +1,29 @@
+meta {
+  name: checkIn
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{baseUrl}}/events/ev-campusmeet-2026/check-ins
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-daria
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "scanned_payload": "DEMO-EXAMPLE",
+    "client_scan_id": "scan-example-001"
+  }
+}
+
+docs {
+  UC-02; US-03,US-04. Mock: stateful. Expected HTTP 201.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

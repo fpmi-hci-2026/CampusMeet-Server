@@ -1,0 +1,783 @@
+{
+  "info": {
+    "name": "CampusMeet Lab4",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000/api/v1"
+    },
+    {
+      "key": "token",
+      "value": "demo-artem"
+    }
+  ],
+  "item": [
+    {
+      "name": "health",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/health",
+        "description": "UC-14; US-13. Access: public. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "demoLogin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/token",
+        "description": "UC-14; US-13. Access: public. Mock mode: stateful.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"demo_user\": \"usr-artem-001\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "getProfile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/me",
+        "description": "UC-14; US-13. Access: authenticated. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "listEvents",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events",
+        "description": "UC-06; US-08. Access: public. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "createEvent",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events",
+        "description": "UC-03; US-05. Access: organizer. Mock mode: stateful.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"CampusMeet: AI & Web\",\n  \"slug\": \"campusmeet-2026\",\n  \"event_type\": \"meetup\",\n  \"venue_id\": \"ven-bsu-01\",\n  \"start_time\": \"2026-11-05T14:00:00Z\",\n  \"end_time\": \"2026-11-05T18:00:00Z\",\n  \"capacity_limit\": 2,\n  \"waitlist_enabled\": true,\n  \"status\": \"registration_open\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "getEvent",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026",
+        "description": "UC-06; US-08. Access: public. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "replaceEvent",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "If-Match",
+            "value": "\"1\""
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026",
+        "description": "UC-03; US-05. Access: organizer. Mock mode: stateful.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"CampusMeet: AI & Web\",\n  \"slug\": \"campusmeet-2026\",\n  \"event_type\": \"meetup\",\n  \"venue_id\": \"ven-bsu-01\",\n  \"start_time\": \"2026-11-05T14:00:00Z\",\n  \"end_time\": \"2026-11-05T18:00:00Z\",\n  \"capacity_limit\": 2,\n  \"waitlist_enabled\": true,\n  \"status\": \"registration_open\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "deleteDraft",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026",
+        "description": "UC-03; US-05. Access: organizer. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "registerAttendee",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "bruno-registration-001"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/registrations",
+        "description": "UC-01; US-01,US-06. Access: authenticated. Mock mode: stateful.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"join_waitlist\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "listMyTickets",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/me/tickets",
+        "description": "UC-07; US-02. Access: authenticated. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "getTicket",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/tickets/tkt-example-01",
+        "description": "UC-07; US-02. Access: owner. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "cancelTicket",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/tickets/tkt-example-01",
+        "description": "UC-08; US-14. Access: owner. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "listCheckIns",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-daria"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/check-ins",
+        "description": "UC-02; US-03,US-04. Access: staff. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "checkIn",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-daria"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/check-ins",
+        "description": "UC-02; US-03,US-04. Access: staff. Mock mode: stateful.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"scanned_payload\": \"DEMO-EXAMPLE\",\n  \"client_scan_id\": \"scan-example-001\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "syncCheckIns",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-daria"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/check-in-batches",
+        "description": "UC-02; US-04. Access: staff. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"device_id\": \"volunteer-device-01\",\n  \"scans\": [\n    {\n      \"scanned_payload\": \"DEMO-EXAMPLE\",\n      \"client_scan_id\": \"scan-offline-001\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "getSchedule",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/schedule",
+        "description": "UC-09; US-11. Access: public. Mock mode: example."
+      }
+    },
+    {
+      "name": "replaceSchedule",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/schedule",
+        "description": "UC-09; US-11. Access: organizer. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"id\": \"sch-item-01\",\n      \"title\": \"Архитектура Offline-First\",\n      \"room\": \"512\",\n      \"start_time\": \"2026-11-05T14:00:00Z\",\n      \"end_time\": \"2026-11-05T15:00:00Z\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "replacePersonalSchedule",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/me/schedule",
+        "description": "UC-09; US-15. Access: authenticated. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"schedule_item_ids\": [\n    \"sch-item-01\"\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "listProposals",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/proposals",
+        "description": "UC-04; US-16. Access: organizer. Mock mode: example."
+      }
+    },
+    {
+      "name": "submitProposal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/proposals",
+        "description": "UC-04; US-16. Access: authenticated. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"topic\": \"Offline-First\",\n  \"abstract_text\": \"Проектирование автономных клиентов\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "reviewProposal",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/proposals/proposal-01",
+        "description": "UC-04; US-16. Access: organizer. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"accepted\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "listTeams",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/teams",
+        "description": "UC-05; US-07. Access: public. Mock mode: example."
+      }
+    },
+    {
+      "name": "createTeam",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/teams",
+        "description": "UC-05; US-07. Access: authenticated. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"team_name\": \"AlphaDevs\",\n  \"looking_for_roles\": \"UI/UX, ML\",\n  \"max_members\": 4\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "inviteMember",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-kirill"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/teams/team-alpha-01/invitations",
+        "description": "UC-05; US-07. Access: captain. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"usr-artem-001\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "answerInvitation",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/team-invitations/invite-01",
+        "description": "UC-05; US-07. Access: owner. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"accepted\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "search",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/search?q=CampusMeet",
+        "description": "UC-06; US-08. Access: public. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "broadcast",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/announcements",
+        "description": "UC-10; US-09. Access: organizer. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Смена аудитории\",\n  \"body_text\": \"Начало в аудитории 519\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "getJob",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          }
+        ],
+        "url": "{{baseUrl}}/jobs/job-01",
+        "description": "UC-10; US-09,US-12. Access: organizer. Mock mode: example."
+      }
+    },
+    {
+      "name": "getWalletPass",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/tickets/tkt-example-01/wallet-pass",
+        "description": "UC-11; US-10. Access: owner. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "exportAttendance",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/events/ev-campusmeet-2026/attendance-exports",
+        "description": "UC-12; US-12. Access: organizer. Mock mode: example.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"format\": \"xlsx\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "listVenues",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/venues",
+        "description": "UC-13; US-05. Access: public. Mock mode: stateful."
+      }
+    },
+    {
+      "name": "geocode",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          }
+        ],
+        "url": "{{baseUrl}}/integrations/geocoding?q=CampusMeet",
+        "description": "UC-13; US-05. Access: organizer. Mock mode: example."
+      }
+    },
+    {
+      "name": "holidays",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer demo-maxim"
+          }
+        ],
+        "url": "{{baseUrl}}/integrations/holidays?year=2026",
+        "description": "UC-13; US-05. Access: organizer. Mock mode: example."
+      }
+    }
+  ]
+}

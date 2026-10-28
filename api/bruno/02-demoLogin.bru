@@ -1,0 +1,27 @@
+meta {
+  name: demoLogin
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/auth/token
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "demo_user": "usr-artem-001"
+  }
+}
+
+docs {
+  UC-14; US-13. Mock: stateful. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

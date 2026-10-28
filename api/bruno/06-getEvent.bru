@@ -1,0 +1,20 @@
+meta {
+  name: getEvent
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/events/ev-campusmeet-2026
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+docs {
+  UC-06; US-08. Mock: stateful. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

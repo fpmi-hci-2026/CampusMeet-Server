@@ -1,0 +1,28 @@
+meta {
+  name: answerInvitation
+  type: http
+  seq: 25
+}
+
+patch {
+  url: {{baseUrl}}/team-invitations/invite-01
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "status": "accepted"
+  }
+}
+
+docs {
+  UC-05; US-07. Mock: example. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

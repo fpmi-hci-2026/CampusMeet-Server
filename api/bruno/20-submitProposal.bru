@@ -1,0 +1,29 @@
+meta {
+  name: submitProposal
+  type: http
+  seq: 20
+}
+
+post {
+  url: {{baseUrl}}/events/ev-campusmeet-2026/proposals
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "topic": "Offline-First",
+    "abstract_text": "Проектирование автономных клиентов"
+  }
+}
+
+docs {
+  UC-04; US-16. Mock: example. Expected HTTP 201.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

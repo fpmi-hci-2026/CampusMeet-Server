@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "CampusMeet Lab4",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

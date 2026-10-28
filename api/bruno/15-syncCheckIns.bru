@@ -1,0 +1,34 @@
+meta {
+  name: syncCheckIns
+  type: http
+  seq: 15
+}
+
+post {
+  url: {{baseUrl}}/events/ev-campusmeet-2026/check-in-batches
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-daria
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "device_id": "volunteer-device-01",
+    "scans": [
+      {
+        "scanned_payload": "DEMO-EXAMPLE",
+        "client_scan_id": "scan-offline-001"
+      }
+    ]
+  }
+}
+
+docs {
+  UC-02; US-04. Mock: example. Expected HTTP 202.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

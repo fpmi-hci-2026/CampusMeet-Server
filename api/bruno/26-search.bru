@@ -1,0 +1,20 @@
+meta {
+  name: search
+  type: http
+  seq: 26
+}
+
+get {
+  url: {{baseUrl}}/search?q=CampusMeet
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+docs {
+  UC-06; US-08. Mock: stateful. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

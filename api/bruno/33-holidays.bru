@@ -1,0 +1,21 @@
+meta {
+  name: holidays
+  type: http
+  seq: 33
+}
+
+get {
+  url: {{baseUrl}}/integrations/holidays?year=2026
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-maxim
+}
+
+docs {
+  UC-13; US-05. Mock: example. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

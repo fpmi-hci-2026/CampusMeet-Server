@@ -1,0 +1,28 @@
+meta {
+  name: reviewProposal
+  type: http
+  seq: 21
+}
+
+patch {
+  url: {{baseUrl}}/proposals/proposal-01
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-maxim
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "status": "accepted"
+  }
+}
+
+docs {
+  UC-04; US-16. Mock: example. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}
