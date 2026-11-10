@@ -19,3 +19,8 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Test Coverage
+.coverage
+htmlcov/
+data/
