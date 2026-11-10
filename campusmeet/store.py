@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .crypto import sign_ticket, verify_ticket_signature
 from .validation import Problem
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -65,9 +66,23 @@ class Store:
         with self.transaction(True) as conn:
             for uid, name, role, alias in USERS:
                 conn.execute("INSERT INTO users(id,email,password_hash,full_name,role) VALUES(?,?,?,?,?)", (uid, alias + "@example.invalid", "!demo-disabled", name, role))
-            conn.execute("INSERT INTO venues VALUES(?,?,?,?,?,?)", ("ven-bsu-01", "ФПМИ БГУ, 512", "Минск, пр-т Независимости, 4", 53.893009, 27.546879, 100))
+            conn.execute("INSERT INTO venues VALUES(?,?,?,?,?,?)", ("ven-bsu-01", "ФПМИ БГУ, ауд. 512", "Минск, пр-т Независимости, 4", 53.893009, 27.546879, 100))
+            conn.execute("INSERT INTO venues VALUES(?,?,?,?,?,?)", ("ven-bsu-02", "ФПМИ БГУ, ауд. 609", "Минск, ул. Ульяновская, 8", 53.891240, 27.558310, 45))
+            conn.execute("INSERT INTO venues VALUES(?,?,?,?,?,?)", ("ven-bsu-03", "Хакатон-коворкинг БГУ", "Минск, ул. Ленинградская, 16", 53.893500, 27.552100, 60))
             conn.execute("INSERT INTO events VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", ("ev-campusmeet-2026", "campusmeet-2026", "CampusMeet: AI & Web", "meetup", "registration_open", "ven-bsu-01", "usr-maxim-003", "2026-11-05T14:00:00Z", "2026-11-05T18:00:00Z", 2, True, 1))
             conn.execute("INSERT INTO event_staff VALUES(?,?,?)", ("ev-campusmeet-2026", "usr-daria-002", "volunteer"))
+
+    def seed_demo_events(self):
+        with self.transaction(True) as conn:
+            demo_events = [
+                ("ev-hackathon-2026", "bsu-hackathon-2026", "BSU Winter AI Hackathon", "hackathon", "registration_open", "ven-bsu-03", "usr-maxim-003", "2026-12-05T09:00:00Z", "2026-12-06T20:00:00Z", 50, True, 1),
+                ("ev-ux-workshop-2026", "ui-ux-pro-max-workshop", "UI/UX Pro Max: Design System Workshop", "workshop", "registration_open", "ven-bsu-02", "usr-maxim-003", "2026-12-12T11:00:00Z", "2026-12-12T15:00:00Z", 30, True, 1),
+            ]
+            for ev in demo_events:
+                existing = conn.execute("SELECT id FROM events WHERE id=?", (ev[0],)).fetchone()
+                if not existing:
+                    conn.execute("INSERT INTO events VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", ev)
+                    conn.execute("INSERT OR IGNORE INTO event_staff VALUES(?,?,?)", (ev[0], "usr-daria-002", "volunteer"))
 
     @staticmethod
     def get(conn, table, identifier):
@@ -106,7 +121,15 @@ class Store:
     @staticmethod
     def ticket_view(ticket):
         fields = ("id", "ticket_code", "event_id", "user_id", "status", "created_at")
-        return {**{key: ticket[key] for key in fields}, "qr_payload": ticket["ticket_code"] if ticket["status"] in ("registered", "checked_in") else None}
+        res = {key: ticket[key] for key in fields}
+        if ticket["status"] in ("registered", "checked_in"):
+            token = sign_ticket(ticket["id"], ticket["user_id"], ticket["event_id"])
+            res["qr_payload"] = token
+            res["hmac_token"] = token
+        else:
+            res["qr_payload"] = None
+            res["hmac_token"] = None
+        return res
 
     def events(self, q="", status="", event_type=""):
         with self.transaction() as conn:
@@ -220,9 +243,18 @@ class Store:
                 if cached["verdict"] != "GRANTED":
                     raise Problem(409, cached["verdict"], "Предыдущая попытка отклонена")
                 return dict(cached)
-            ticket = conn.execute("SELECT * FROM tickets WHERE ticket_code=? AND event_id=?", (payload, event_id)).fetchone()
+            ticket = None
+            if payload and payload.startswith("v1."):
+                parts = payload.split(".")
+                if len(parts) == 4:
+                    tkt_id = parts[1]
+                    cand = conn.execute("SELECT * FROM tickets WHERE id=? AND event_id=?", (tkt_id, event_id)).fetchone()
+                    if cand and verify_ticket_signature(payload, event_id):
+                        ticket = cand
             if not ticket:
-                raise Problem(404, "TICKET_NOT_FOUND", "Демонстрационный код не найден")
+                ticket = conn.execute("SELECT * FROM tickets WHERE (ticket_code=? OR id=?) AND event_id=?", (payload, payload, event_id)).fetchone()
+            if not ticket:
+                raise Problem(404, "TICKET_NOT_FOUND", "Билет или криптографический код не найден")
             verdict = "GRANTED" if ticket["status"] == "registered" else "DENIED_ALREADY_USED" if ticket["status"] == "checked_in" else "DENIED_INVALID_STATUS"
             record = {"id": new_id("chk"), "event_id": event_id, "ticket_id": ticket["id"], "scanned_by_volunteer_id": actor["id"], "client_scan_id": scan_id, "verdict": verdict, "verification_mode": "online", "scanned_at": now()}
             conn.execute("INSERT INTO check_in_logs(" + ",".join(record) + ") VALUES(" + ",".join("?" for _ in record) + ")", list(record.values()))
@@ -240,3 +272,11 @@ class Store:
     def audit(self, actor, action, target_id, outcome):
         with self.transaction(True) as conn:
             conn.execute("INSERT INTO agent_audit_log(id,actor_user_id,action,target_id,outcome) VALUES(?,?,?,?,?)", (new_id("audit"), actor["id"], action, target_id, outcome))
+
+    def venues(self):
+        with self.transaction() as conn:
+            return [dict(r) for r in conn.execute("SELECT * FROM venues ORDER BY id")]
+
+    def venue(self, venue_id):
+        with self.transaction() as conn:
+            return self.get(conn, "venues", venue_id)
