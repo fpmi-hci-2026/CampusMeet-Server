@@ -229,7 +229,8 @@ def check_in_ticket(
     Верификация билета волонтером на входе.
     Проверяет HMAC-подпись или код билета, защищает от повторного прохода (HTTP 409).
     """
-    return store.check_in(actor, event_id, data.payload, data.client_scan_id)
+    payload = data.scanned_payload or data.payload
+    return store.check_in(actor, event_id, payload, data.client_scan_id)
 
 
 @app.get("/api/v1/events/{event_id}/check-ins", response_model=List[CheckInResponse], tags=["CheckIn"])

@@ -319,6 +319,24 @@ def test_check_in_forbidden_for_non_volunteer(client):
     assert res.json()["code"] == "FORBIDDEN"
 
 
+def test_check_in_with_scanned_payload_contract_field(client):
+    """Проверка обратной совместимости поля scanned_payload из контракта OpenAPI и smoke_http.py."""
+    # Регистрация нового билета на хакатон
+    scan_tkt = client.post(
+        "/api/v1/events/ev-hackathon-2026/registrations",
+        json={"join_waitlist": False},
+        headers={"Authorization": "Bearer demo-artem", "Idempotency-Key": f"key-smoke-{uuid.uuid4().hex[:8]}"}
+    ).json()
+
+    res = client.post(
+        "/api/v1/events/ev-hackathon-2026/check-ins",
+        json={"client_scan_id": f"scan-{uuid.uuid4().hex[:8]}", "scanned_payload": scan_tkt["ticket_code"]},
+        headers={"Authorization": "Bearer demo-daria"}
+    )
+    assert res.status_code == 201
+    assert res.json()["verdict"] == "GRANTED"
+
+
 def test_list_check_ins_log(client):
     res = client.get("/api/v1/events/ev-campusmeet-2026/check-ins", headers={"Authorization": "Bearer demo-daria"})
     assert res.status_code == 200

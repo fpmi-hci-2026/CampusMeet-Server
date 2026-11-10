@@ -1,6 +1,6 @@
 """Pydantic v2 schemas for CampusMeet REST API."""
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class ProblemDetails(BaseModel):
@@ -93,7 +93,19 @@ class TicketListResponse(BaseModel):
 
 class CheckInRequest(BaseModel):
     client_scan_id: str
-    payload: str
+    scanned_payload: Optional[str] = None
+    payload: Optional[str] = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def resolve_payload(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            p = data.get("scanned_payload") or data.get("payload")
+            if not p:
+                raise ValueError("Field 'scanned_payload' or 'payload' is required and cannot be empty")
+            data["scanned_payload"] = p
+            data["payload"] = p
+        return data
 
 
 class CheckInResponse(BaseModel):
