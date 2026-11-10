@@ -1,1 +1,1 @@
-"""CampusMeet laboratory 4: contract mock and MCP integration MVP."""
+"""CampusMeet Backend & API (Laboratories 4 & 7)."""

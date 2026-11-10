@@ -1,7 +1,7 @@
 name: Server contracts, tests and container
 on:
   push:
-    branches: [main, develop, production, development]
+    branches: [main, develop, production, development, lab7]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -25,9 +25,11 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
       - run: ruff check campusmeet scripts tests
+      - run: flake8 --max-line-length=160 campusmeet/app.py campusmeet/crypto.py campusmeet/schemas.py tests/test_lab7.py
       - run: python scripts/export_contracts.py && python scripts/build_sqlite_schema.py
       - run: git diff --exit-code -- api database/schema.sqlite.sql
       - run: python -m unittest discover -s tests -v
+      - run: pytest --cov=campusmeet --cov-report=term-missing tests/
       - run: python scripts/mcp_client.py --output evidence/mcp-ci-session.json
       - name: Apply physical PostgreSQL schema
         env:

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusMeet Pass — Мобильный билет (ЛР7)</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="device-shell">
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="dynamic-island"></div>
+      <span>5G  🔋</span>
+    </div>
+
+    <div class="app-header">
+      <div class="app-title">CampusMeet Pass</div>
+      <div id="verifiedBadge" class="verified-pill">● ОФЛАЙН ТОКЕН</div>
+    </div>
+
+    <div class="app-content">
+      <div class="pass-card">
+        <h2 id="passEventTitle" class="event-headline">CampusMeet: AI & Web Tech</h2>
+        <div id="passEventVenue" class="event-subline">📍 ФПМИ БГУ, ауд. 512</div>
+        
+        <div class="qr-container">
+          <!-- Dynamic QR Matrix SVG -->
+          <svg id="qrSvg" class="qr-matrix-svg" viewBox="0 0 100 100">
+            <!-- Programmatically populated modules -->
+          </svg>
+          <div class="qr-timer-badge">
+            <span class="timer-dot"></span>
+            <span id="countdownText">HMAC активен: 45s</span>
+          </div>
+        </div>
+
+        <div class="pass-grid">
+          <div>
+            <div class="pass-field-label">Слушатель</div>
+            <div id="passAttendee" class="pass-field-val">Артём Ковалёв</div>
+          </div>
+          <div>
+            <div class="pass-field-label">Статус</div>
+            <div id="passStatus" class="pass-field-val" style="color: var(--success);">REGISTERED</div>
+          </div>
+          <div>
+            <div class="pass-field-label">Номер билета</div>
+            <div id="passCode" class="pass-field-val" style="font-family: var(--font-mono);">DEMO-TKT-001</div>
+          </div>
+          <div>
+            <div class="pass-field-label">Дата & Время</div>
+            <div id="passTime" class="pass-field-val">20 ноя, 14:00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-box">
+        <div style="font-size: 12px; color: var(--text-muted); text-align: center;">
+          Имитация работы сканера волонтера (стойка регистрации):
+        </div>
+        <button id="scanBtn" class="btn-scan">
+          <span>📷</span>
+          <span>Проверить проход сканером</span>
+        </button>
+
+        <div id="scanResult" class="status-callout"></div>
+      </div>
+    </div>
+
+    <div class="home-bar"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

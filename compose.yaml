@@ -1,27 +1,18 @@
-name: campusmeet-lab4
+name: campusmeet-lab7
 services:
   api:
     build: .
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
-      - mock-data:/app/data
+      - campusmeet-data:/app/data
+    environment:
+      CAMPUSMEET_DB: /app/data/campusmeet.db
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health',timeout=2)"]
       interval: 5s
       timeout: 3s
       retries: 10
-  web:
-    build: ../CampusMeet-Web
-    environment:
-      API_URL: http://api:8000/api/v1
-      HOST: 0.0.0.0
-      PORT: "3000"
-    ports:
-      - "127.0.0.1:3000:3000"
-    depends_on:
-      api:
-        condition: service_healthy
   postgres:
     image: postgres:16-alpine
     profiles: ["database"]
@@ -46,7 +37,7 @@ services:
       - sonar-data:/opt/sonarqube/data
       - sonar-extensions:/opt/sonarqube/extensions
 volumes:
-  mock-data:
+  campusmeet-data:
   postgres-data:
   sonar-data:
   sonar-extensions:
