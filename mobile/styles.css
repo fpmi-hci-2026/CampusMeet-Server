@@ -1,0 +1,261 @@
+:root {
+  --bg-device: #000000;
+  --bg-card: #0d0d0d;
+  --bg-subcard: #141414;
+  --border: #262626;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --accent-indigo: #6366f1;
+  --accent-orange: #ea580c;
+  --success: #10b981;
+  --danger: #ef4444;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #050505;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Device Shell (iPhone 16 Pro styling) */
+.device-shell {
+  width: 375px;
+  min-height: 780px;
+  background: var(--bg-device);
+  border: 4px solid #27272a;
+  border-radius: 48px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px #3f3f46;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Status Bar */
+.status-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dynamic-island {
+  width: 108px;
+  height: 28px;
+  background: #000000;
+  border-radius: 20px;
+  margin: 0 auto;
+  border: 1px solid #1c1c1e;
+}
+
+/* Header */
+.app-header {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.app-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.verified-pill {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Content Area */
+.app-content {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Pass Card */
+.pass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-indigo), var(--accent-orange));
+}
+
+.event-headline {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+.event-subline {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Dynamic QR Frame */
+.qr-container {
+  margin: 18px 0;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.qr-matrix-svg {
+  width: 180px;
+  height: 180px;
+}
+
+.qr-timer-badge {
+  position: absolute;
+  bottom: 8px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timer-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent-indigo);
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+/* Pass Details */
+.pass-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed #27272a;
+}
+
+.pass-field-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.pass-field-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+/* Actions */
+.action-box {
+  background: var(--bg-subcard);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-scan {
+  background: var(--accent-indigo);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.btn-scan:hover {
+  background: #4f46e5;
+}
+
+.status-callout {
+  font-size: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  display: none;
+}
+
+.status-callout.granted {
+  display: block;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-callout.denied {
+  display: block;
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Home Indicator */
+.home-bar {
+  width: 134px;
+  height: 5px;
+  background: #52525b;
+  border-radius: 999px;
+  margin: 12px auto;
+}
