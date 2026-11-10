@@ -1,0 +1,28 @@
+meta {
+  name: exportAttendance
+  type: http
+  seq: 30
+}
+
+post {
+  url: {{baseUrl}}/events/ev-campusmeet-2026/attendance-exports
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-maxim
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "format": "xlsx"
+  }
+}
+
+docs {
+  UC-12; US-12. Mock: example. Expected HTTP 202.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

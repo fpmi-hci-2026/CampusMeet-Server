@@ -1,0 +1,28 @@
+meta {
+  name: inviteMember
+  type: http
+  seq: 24
+}
+
+post {
+  url: {{baseUrl}}/teams/team-alpha-01/invitations
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-kirill
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "user_id": "usr-artem-001"
+  }
+}
+
+docs {
+  UC-05; US-07. Mock: example. Expected HTTP 201.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

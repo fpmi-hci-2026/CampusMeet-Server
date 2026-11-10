@@ -1,0 +1,29 @@
+meta {
+  name: broadcast
+  type: http
+  seq: 27
+}
+
+post {
+  url: {{baseUrl}}/events/ev-campusmeet-2026/announcements
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-maxim
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "title": "Смена аудитории",
+    "body_text": "Начало в аудитории 519"
+  }
+}
+
+docs {
+  UC-10; US-09. Mock: example. Expected HTTP 202.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

@@ -1,0 +1,21 @@
+meta {
+  name: cancelTicket
+  type: http
+  seq: 12
+}
+
+delete {
+  url: {{baseUrl}}/tickets/tkt-example-01
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer {{token}}
+}
+
+docs {
+  UC-08; US-14. Mock: stateful. Expected HTTP 204.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

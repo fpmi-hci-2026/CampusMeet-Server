@@ -1,0 +1,36 @@
+meta {
+  name: createEvent
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/events
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-maxim
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "title": "CampusMeet: AI & Web",
+    "slug": "campusmeet-2026",
+    "event_type": "meetup",
+    "venue_id": "ven-bsu-01",
+    "start_time": "2026-11-05T14:00:00Z",
+    "end_time": "2026-11-05T18:00:00Z",
+    "capacity_limit": 2,
+    "waitlist_enabled": true,
+    "status": "registration_open"
+  }
+}
+
+docs {
+  UC-03; US-05. Mock: stateful. Expected HTTP 201.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

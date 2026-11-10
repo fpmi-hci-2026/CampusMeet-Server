@@ -1,0 +1,21 @@
+meta {
+  name: listMyTickets
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/me/tickets
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer {{token}}
+}
+
+docs {
+  UC-07; US-02. Mock: stateful. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

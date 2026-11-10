@@ -1,0 +1,21 @@
+meta {
+  name: getWalletPass
+  type: http
+  seq: 29
+}
+
+get {
+  url: {{baseUrl}}/tickets/tkt-example-01/wallet-pass
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer {{token}}
+}
+
+docs {
+  UC-11; US-10. Mock: stateful. Expected HTTP 501.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

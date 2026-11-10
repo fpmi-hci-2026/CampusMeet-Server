@@ -1,0 +1,20 @@
+meta {
+  name: health
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/health
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+docs {
+  UC-14; US-13. Mock: stateful. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

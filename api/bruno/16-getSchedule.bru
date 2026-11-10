@@ -1,0 +1,20 @@
+meta {
+  name: getSchedule
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{baseUrl}}/events/ev-campusmeet-2026/schedule
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+docs {
+  UC-09; US-11. Mock: example. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

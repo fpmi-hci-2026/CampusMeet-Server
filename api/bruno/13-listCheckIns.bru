@@ -1,0 +1,21 @@
+meta {
+  name: listCheckIns
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/events/ev-campusmeet-2026/check-ins
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-daria
+}
+
+docs {
+  UC-02; US-03,US-04. Mock: stateful. Expected HTTP 200.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}

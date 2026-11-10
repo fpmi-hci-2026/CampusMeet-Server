@@ -1,76 +1,91 @@
-# CampusMeet-Server (Серверное приложение и API шлюз)
-
-> **Статус репозитория:** Каркас для Лабораторной работы №1. На данном этапе спроектирована, валидирована и размещена исполняемая DDL-схема реляционной базы данных (`database/schema.sql`). Программная реализация бизнес-логики и REST API шлюза на FastAPI запланирована в рамках Лабораторной работы №6.
+# CampusMeet-Server
 
 ## Project Name
-**CampusMeet-Server** — серверное приложение и REST API шлюз экосистемы CampusMeet для управления мероприятиями, билетами, криптографической валидацией QR-кодов и фоновыми рассылками.
+
+**CampusMeet / EventHub — контракты API, HTTP mock и MCP MVP.** Лабораторная работа №4: «Стили интеграции программных систем и проектирование API», ПЧМИ, БГУ ФПМИ, 2026–2027.
 
 ## Description
-CampusMeet-Server представляет собой модульный высокопроизводительный бэкенд на базе FastAPI / Python, реализующий бизнес-логику управления студенческими и IT-мероприятиями. Сервис обеспечивает строгую реляционную целостность данных в СУБД (PostgreSQL / SQLite), криптографическую подпись и верификацию динамических офлайн-токенов билетов по алгоритму HMAC-SHA256, управление квотами регистрации и листом ожидания (Waitlist), а также интеграционные шлюзы с внешними сервисами геокодирования (Nominatim OpenStreetMap) и производственного календаря (Nager.Date API). Архитектура сервиса ориентирована на субсекундную обработку запросов и надежную работу в условиях нестабильного сетевого подключения.
+
+Репозиторий содержит OpenAPI 3.0.3 на 33 операции, физические модели PostgreSQL и SQLite на 17 таблиц, исполняемый HTTP mock и MCP-сервер. Регистрация, очередь, отмена, чекин и редактирование событий работают с транзакционной SQLite mock-базой. Остальные операции показывают примеры контракта и обозначены `X-Mock-Mode: example`; фоновые рассылки, Wallet и криптографический QR еще не реализованы. Полная реализация на FastAPI относится к следующим работам; учебный mock работает на стандартной библиотеке Python без установки зависимостей.
 
 ## Installation
-### 1. Клонирование репозитория:
+
+Python 3.12+, для контейнеров — Docker Compose v2. CampusMeet-Web должен находиться рядом с Server.
+
 ```bash
 git clone git@github.com:fpmi-hci-2026/CampusMeet-Server.git
 cd CampusMeet-Server
+python3 scripts/export_contracts.py
+python3 scripts/build_sqlite_schema.py
+python3 -m campusmeet.mock_api
 ```
 
-### 2. Инициализация и проверка базы данных (доступно для Лабораторной работы №1):
-Реляционная схема базы данных спроектирована на 10 взаимосвязанных таблиц со строгим ссылочным контролем внешних ключей и демонстрационными записями.
+Mock создает `data/mock.sqlite3` при отсутствии схемы, сохраняет данные при перезапуске. Для отдельной демонстрации: `python3 -m campusmeet.mock_api --db /tmp/campusmeet-demo.sqlite3`. Не запускайте две инициализации одной новой базы одновременно. Схема ЛР1 сохранена в `database/schema.sql`; она содержит DROP TABLE и предназначена только для воспроизведения старого учебного примера, не для обновления базы.
 
-Для создания локальной базы данных SQLite и проверки схемы выполните команду:
 ```bash
-python3 -c "import sqlite3; conn = sqlite3.connect('database/campusmeet.db'); conn.executescript(open('database/schema.sql').read()); print('База данных успешно инициализирована (10 таблиц, тестовые данные добавлены)')"
+# API + Web:
+docker compose up --build -d
+# PostgreSQL для проверки физической модели:
+docker compose --profile database up -d postgres
+# На свежей mock-базе:
+python3 scripts/smoke_http.py --output evidence/http-session.json
+# Остановить, сохранив данные:
+docker compose down
 ```
 
-### 3. Подготовка рабочего окружения для этапа разработки (Лабораторная работа №6):
-```bash
-# Создание и активация виртуального окружения Python 3.10+:
-python3 -m venv venv
-source venv/bin/activate  # Для Linux / macOS
-# venv\Scripts\activate   # Для Windows
+Полная независимая Docker-проверка из обычного терминала: `bash scripts/verify-docker.sh`. Скрипт создает отдельный Compose-проект, проверяет HTTP и 17 таблиц PostgreSQL, сохраняет протокол в evidence и удаляет только созданные им демонстрационные контейнеры/volumes. Требует свободных портов 8000 и 3000.
 
-# Установка базовых зависимостей:
-pip install -r requirements.txt
-```
+API: `http://127.0.0.1:8000/api/v1`; Web: `http://127.0.0.1:3000`; OpenAPI: `http://127.0.0.1:8000/openapi.json`. PostgreSQL-профиль проверяет целевую схему и **не подключает SQLite mock к PostgreSQL**. Промышленный PostgreSQL-адаптер относится к следующему этапу.
 
 ## Sub modules
-Согласно методическим требованиям дисциплины ПЧМИ для учебных подгрупп 12а и 12б, архитектура проекта CampusMeet разделена на четыре взаимосвязанных репозитория:
-* **[CampusMeet (Основной репозиторий для документации)](https://github.com/fpmi-hci-2026/CampusMeet):** `git@github.com:fpmi-hci-2026/CampusMeet.git` — центральный репозиторий документации, содержащий академические отчеты по курсу ПЧМИ (`docs/reports/`), результаты социологического исследования (`docs/survey/`), проектную базу знаний GitHub Wiki (`wiki/`) и интерактивный портал GitHub Pages (`docs/index.html`).
-* **[CampusMeet-Web (Репозиторий для веб-клиента)](https://github.com/fpmi-hci-2026/CampusMeet-Web):** `git@github.com:fpmi-hci-2026/CampusMeet-Web.git` — веб-приложение для организаторов и модераторов (Next.js 14, Tailwind CSS, App Router) для администрирования событий, визуального конструктора тайминга программы, модерации заявок спикеров (CFP) и аналитики явки.
-* **[CampusMeet-Mobile (Репозиторий для мобильного клиента)](https://github.com/fpmi-hci-2026/CampusMeet-Mobile):** `git@github.com:fpmi-hci-2026/CampusMeet-Mobile.git` — кроссплатформенный мобильный клиент (React Native, Expo) для участников и волонтеров стойки регистрации на iOS и Android с поддержкой автономного динамического офлайн-билета, оптического сканера и расписания «Моя программа».
+
+- [CampusMeet — отчеты, Wiki, портал](https://github.com/fpmi-hci-2026/CampusMeet).
+- [CampusMeet-Web — Next.js каркас и Lab4 demo-афиша](https://github.com/fpmi-hci-2026/CampusMeet-Web).
+- [CampusMeet-Mobile — Expo каркас, минимальная афиша и API-клиент](https://github.com/fpmi-hci-2026/CampusMeet-Mobile).
 
 ## Usage
-### Проектируемые эндпоинты REST API (Спецификация для Лабораторной работы №6)
 
-> **Примечание:** Описанные эндпоинты зафиксированы в архитектурном контракте системы (`wiki/API_Specification.md`) и будут реализованы на этапе разработки сервера.
-
-1. **Каталог и создание мероприятий:**
-   * `GET /api/v1/events` — постраничное получение каталога мероприятий с фильтрацией по статусу и типу.
-   * `POST /api/v1/events` — создание нового события организатором с валидацией лимитов квот.
-   * `GET /api/v1/events/{event_id}` — получение подробной карточки события и тайминга докладов.
-
-2. **Регистрация и выпуск билетов (Tickets API):**
-   * `POST /api/v1/events/{event_id}/register` — мгновенная регистрация пользователя на мероприятие с выдачей криптографического QR-токена HMAC-SHA256 для автономного офлайн-чекина.
-
-3. **Оптическая валидация QR-билетов (Сканер волонтера):**
-   * `POST /api/v1/tickets/validate-qr` — декодирование и проверка криптографической подписи билета в реальном времени. В случае успешного первого сканирования возвращает `HTTP 200 OK` (`GRANTED`), при попытке повторного входа по тому же билету — `HTTP 409 Conflict` (`DENIED_ALREADY_USED`) с фиксацией времени и данных первого контролера.
-
-4. **Экстренное оповещение участников:**
-   * `POST /api/v1/events/{event_id}/announcements/broadcast` — немедленная рассылка push-уведомлений участникам при переносе аудитории или задержке тайминга.
-
-5. **Мониторинг работоспособности:**
-   * `GET /api/v1/health` — проверка статуса сервиса, версии API и соединения с базой данных.
-
-Пример проверки статуса через `curl`:
 ```bash
-curl -X GET "http://localhost:8000/api/v1/health" -H "accept: application/json"
+curl http://127.0.0.1:8000/api/v1/health
+curl http://127.0.0.1:8000/api/v1/events
+python3 -m campusmeet.mcp_server --token demo-artem
+python3 scripts/mcp_client.py --output evidence/mcp-session.json
+python3 -m unittest discover -s tests -v
 ```
 
-## Contributing
-Разработка серверного приложения и REST API ведется в рамках дисциплины «Проектирование человеко-машинных интерфейсов» (ФПМИ БГУ).
+Полная валидация и линтер для CI:
 
-### Участники команды:
-* Минчук Станислав
-* Иванова Виктория
-* Шварцман Дидар
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+ruff check campusmeet scripts tests
+python3 -m unittest discover -s tests -v
+```
+
+| Материал | Файл |
+|:--|:--|
+| Контракт, примеры, Bruno и Postman | [api/README.md](api/README.md) |
+| Маршруты → User Stories → Use Cases | [api/route-matrix.md](api/route-matrix.md) |
+| PostgreSQL 16, новая физическая модель | [database/schema.postgresql.sql](database/schema.postgresql.sql) |
+| SQLite 3, исполняемая mock-модель | [database/schema.sqlite.sql](database/schema.sqlite.sql) |
+| MCP: Tools, Resources, Prompts, Inspector | [mcp/README.md](mcp/README.md) |
+| Локальные тесты | [evidence/local-tests.txt](evidence/local-tests.txt) |
+| Протокол MCP-процесса | [evidence/mcp-session.json](evidence/mcp-session.json) |
+| Контейнеры API, Web, PostgreSQL, SonarQube | [compose.yaml](compose.yaml) |
+
+Учебные токены: `demo-artem`, `demo-vlad`, `demo-kirill`, `demo-daria`, `demo-maxim`, `demo-viktor`, `demo-sergey`. Они соответствуют персонажам ЛР1. `POST /auth/token` — имитация входа по fixture user без проверки пароля, не настоящая аутентификация. Событие имеет два места для демонстрации исчерпания квоты и очереди.
+
+## Инфраструктура и публикация
+
+`.github/workflows/ci.yml` экспортирует контракты, проверяет актуальность генерируемых файлов, выполняет тесты, применяет DDL в PostgreSQL 16 и только затем собирает контейнер с HTTP smoke-проверкой. Workflow запустится после отправки коммитов, которой на этапе подготовки ЛР4 еще не было.
+
+Локальный SonarQube: `docker compose --profile quality up -d sonarqube`, затем запустите SonarScanner со своим токеном и `sonar-project.properties`. Поднятый контейнер без анализа не считается пройденной проверкой качества.
+
+Для SonarCloud и Render подготовлен ручной workflow `quality-deploy.yml`: нужны `SONAR_TOKEN`, переменная `SONAR_ORGANIZATION`, секрет `RENDER_DEPLOY_HOOK`, проект Sonar и окружение `production`. При отсутствии конфигурации он завершается ошибкой, не пропускает quality gate. `render.yaml` описывает учебный mock с временным SQLite-хранилищем; автодеплой отключен. Деплой и облачный анализ пока не выполнялись.
+
+Существующий `main` соответствует production, будущий `develop` — development. Отдельные ветки production/development команда может согласовать позже. Ветки, коммиты, Issues и GitHub Projects при подготовке файлов не создавались. План и распределение на ревью находятся в Wiki основного репозитория.
+
+## Contributing
+
+Команда: Минчук Станислав, Иванова Виктория, Шварцман Дидар. Комплект ЛР4 подготовлен для просмотра командой до коммита. В отчете предложенные ответственные за ревью отделены от подтвержденного вклада; несуществующие коммиты и запуски CI не перечисляются.

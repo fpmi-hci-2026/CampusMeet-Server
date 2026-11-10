@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: campusmeet-api-mock
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/v1/health
+    autoDeploy: false
+    envVars:
+      - key: PORT
+        value: "8000"

@@ -1,0 +1,21 @@
+meta {
+  name: deleteDraft
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{baseUrl}}/events/ev-campusmeet-2026
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Authorization: Bearer demo-maxim
+}
+
+docs {
+  UC-03; US-05. Mock: stateful. Expected HTTP 204.
+  Ticket examples are placeholders: use an id/code returned by registration.
+}
